@@ -8,6 +8,7 @@ app.use(express.static("public"));
 const serverPort = process.env.PORT || 3000;
 const server = http.createServer(app);
 const WebSocket = require("ws");
+const connectedUsers = new Set();
 
 let keepAliveId;
 
@@ -22,6 +23,8 @@ console.log(`Server started on port ${serverPort} in stage ${process.env.NODE_EN
 wss.on("connection", function (ws, req) {
   console.log("Connection Opened");
   console.log("Client size: ", wss.clients.size);
+
+  connectedUsers.add(ws);
 
   if (wss.clients.size === 1) {
     console.log("first connection. starting keepalive");
@@ -39,6 +42,8 @@ wss.on("connection", function (ws, req) {
 
   ws.on("close", (data) => {
     console.log("closing connection");
+
+    connectedUsers.delete(ws);
 
     if (wss.clients.size === 0) {
       console.log("last client disconnected, stopping keepAlive interval");
@@ -80,4 +85,11 @@ const broadcast = (ws, message, includeSelf) => {
 
 app.get('/', (req, res) => {
     res.send('Hello World!');
+});
+
+// Route API pour obtenir les utilisateurs connectés
+app.get('/api/connected-users', (req, res) => {
+  // Convertir la liste des utilisateurs connectés en tableau et renvoyer en JSON
+  const users = [...connectedUsers].map(user => user.id); // Supposons que l'utilisateur ait une propriété "id"
+  res.json({ users });
 });
