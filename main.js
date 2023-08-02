@@ -90,6 +90,6 @@ app.get('/', (req, res) => {
 // Route API pour obtenir les utilisateurs connectés
 app.get('/api/connected-users', (req, res) => {
   // Convertir la liste des utilisateurs connectés en tableau et renvoyer en JSON
-  const users = [...connectedUsers].map(user => user.id); // Supposons que l'utilisateur ait une propriété "id"
+  const users = [...connectedUsers].map(user => user); // Supposons que l'utilisateur ait une propriété "id"
   res.json({ users });
 });
