@@ -1,9 +1,24 @@
 const http = require("http");
 const express = require("express");
+const cors = require("cors");
 const app = express();
 
+app.use(cors({
+    origin: function (origin, callback) {
+        // Liste des origines autorisées
+        const allowedOrigins = ['http://exemple.fr', 'http://localhost:3000'];
+
+        // Si l'origine de la requête est dans notre liste ou si la requête n'a pas d'en-tête d'origine (par exemple, pour les requêtes POSTman)
+        // alors on autorise l'origine
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Origine non autorisée par la politique CORS'));
+        }
+    }
+}));
+
 app.use(express.static("public"));
-// require("dotenv").config();
 
 const serverPort = process.env.PORT || 3000;
 const server = http.createServer(app);
