@@ -6,7 +6,7 @@ const app = express();
 app.use(cors({
     origin: function (origin, callback) {
         // Liste des origines autorisées
-        const allowedOrigins = ['http://exemple.fr', 'http://localhost:3000'];
+        const allowedOrigins = ['https://teuf-web.vercel.app/', 'http://localhost:3000'];
 
         // Si l'origine de la requête est dans notre liste ou si la requête n'a pas d'en-tête d'origine (par exemple, pour les requêtes POSTman)
         // alors on autorise l'origine
